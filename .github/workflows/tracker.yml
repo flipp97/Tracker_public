@@ -1,0 +1,38 @@
+name: Electromaps Tracker
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install requests
+
+      - run: python tracker.py
+
+      - name: Commit data
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add *.csv
+          git commit -m "update data" || exit 0
+          git push
+
+      - name: Trigger next run (15 min later)
+        run: |
+          sleep 900
+          gh workflow run tracker.yml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
