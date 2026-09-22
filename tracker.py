@@ -10,6 +10,10 @@ LOCATIONS = [
     {
         "id": 410223,
         "name": "vitalisstrasse.csv"
+    },
+    {
+        "id": 689949,
+        "name": "bonn.csv"
     }
 ]
 
